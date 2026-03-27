@@ -1,6 +1,6 @@
 import json
 import os
-from config import PRICES_FILE,CHAT_FILE;
+from config import PRICES_FILE,CHAT_ID_FILE;
 
 def load_last_prices ():
     if os.path.exists (PRICES_FILE):
