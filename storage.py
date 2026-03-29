@@ -13,13 +13,13 @@ def save_prices (prices):
         json.dump (prices,f,ensure_ascii = 'false',indent = 2)
 
 def load_chat_id ():
-    if os.path.exists (CHAT_FILE):
-        with open (CHAT_FILE,r) as f:
+    if os.path.exists (CHAT_ID_FILE):
+        with open (CHAT_ID_FILE,r) as f:
             return int(f.read().strip())
     return None;
 
 def save_chat_id(chat_id):
     """Сохраняет ID чата в файл."""
-    with open(CHAT_FILE, 'w') as f:
+    with open(CHAT_ID_FILE, 'w') as f:
         f.write(str(chat_id))
         
