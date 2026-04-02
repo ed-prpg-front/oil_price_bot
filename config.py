@@ -6,7 +6,7 @@ TOKEN = os.getenv("TOKEN")
 
 #Адрес страницы с ценами
 
-TARGET_URL = "https://new.trade.tatneft.ru/promo/production/?format=for_bottling&shipping-method=Автотранспорт&shipment-basis=13";
+TARGET_URL = "https://new.trade.tatneft.ru/promo/production/58";
 
 #Московский часовой пояс
 
