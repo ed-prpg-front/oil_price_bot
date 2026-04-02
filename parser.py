@@ -1,7 +1,7 @@
 import requests
 
 # URL API, который вы нашли
-API_URL = "https://trade.tatneft.ru/promo/ajax/products.php"
+API_URL = "https://new.trade.tatneft.ru/promo/ajax/products.php"
 
 def fetch_prices():
     """
