@@ -94,14 +94,15 @@ async def run_bot():
     application.add_handler(CommandHandler("start", start))
     
     # Настройка планировщика задач
-    scheduler = BackgroundScheduler(timezone=MOSCOW_TZ)
     scheduler.add_job(
-        lambda: asyncio.create_task(morning_report(application.bot, None)),
-        CronTrigger(hour=8, minute=0, timezone=MOSCOW_TZ)
+        morning_report,   # без лямбды, напрямую
+        CronTrigger(hour=8, minute=0, timezone=MOSCOW_TZ),
+        args=[application]   # передаём application как аргумент
     )
     scheduler.add_job(
-        lambda: asyncio.create_task(afternoon_check(application.bot, None)),
-        CronTrigger(hour=13, minute=5, timezone=MOSCOW_TZ)
+        afternoon_check,
+        CronTrigger(hour=13, minute=5, timezone=MOSCOW_TZ),
+        args=[application]
     )
     scheduler.start()
     
