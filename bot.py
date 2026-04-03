@@ -43,7 +43,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "отчёт об изменениях после биржевых торгов (около 13:05 МСК)."
     )
 
-async def morning_report(context: ContextTypes.DEFAULT_TYPE):
+async def morning_report(app):
     chat_id = load_chat_id()
     if not chat_id:
         logger.warning("Нет сохранённого chat_id, утренний отчёт не отправлен.")
@@ -54,39 +54,18 @@ async def morning_report(context: ContextTypes.DEFAULT_TYPE):
         text = "🌅 Доброе утро! Текущие цены на нефтепродукты:\n"
         for product, price in prices.items():
             text += f"• {product}: {price} ₽\n"
-        await context.bot.send_message(chat_id=chat_id, text=text)
+        await app.bot.send_message(chat_id=chat_id, text=text)
     else:
-        await context.bot.send_message(chat_id=chat_id, text="Не удалось получить цены утром. Проверьте сайт.")
+        await app.bot.send_message(chat_id=chat_id, text="Не удалось получить цены утром. Проверьте сайт.")
 
-async def afternoon_check(context: ContextTypes.DEFAULT_TYPE):
+async def afternoon_check(app):
+    # аналогично, используем app.bot
     chat_id = load_chat_id()
     if not chat_id:
         logger.warning("Нет сохранённого chat_id, дневной отчёт не отправлен.")
         return
     old_prices = load_last_prices()
     new_prices = fetch_prices()
-    if not new_prices:
-        await context.bot.send_message(chat_id=chat_id, text="Не удалось получить свежие цены после 13:00.")
-        return
-    save_prices(new_prices)
-    changes = []
-    for product, new_price in new_prices.items():
-        old_price = old_prices.get(product)
-        if old_price is not None and old_price != new_price:
-            diff = new_price - old_price
-            arrow = "🔺" if diff > 0 else "🔻"
-            changes.append(f"{product}: {old_price} ₽ → {new_price} ₽ {arrow} ({diff:+.2f})")
-        elif old_price is None:
-            changes.append(f"{product}: появилась цена {new_price} ₽ (новая позиция)")
-    for product in old_prices:
-        if product not in new_prices:
-            changes.append(f"{product}: пропала из списка")
-    if changes:
-        text = "📊 Изменения цен после биржевых торгов (13:00 МСК):\n" + "\n".join(changes)
-    else:
-        text = "✅ Цены на нефтепродукты не изменились после биржевых торгов."
-    await context.bot.send_message(chat_id=chat_id, text=text)
-
 # --- Основная функция для запуска бота и планировщика ---
 async def run_bot():
     """Запускает Telegram-бота с планировщиком."""
