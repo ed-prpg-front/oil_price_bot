@@ -61,7 +61,7 @@ async def morning_report(app):
         print("DEBUG: no prices, sending error message")
         await app.bot.send_message(chat_id=chat_id, text="Не удалось получить цены утром. Проверьте сайт.")
         print("DEBUG: error message sent")
-        logger.info(f"Функция morning_report вызвана в {datetime.datetime.now()}"
+        logger.info(f"Функция morning_report вызвана в {datetime.datetime.now()}")
 async def afternoon_check(app):
     chat_id = load_chat_id()
     if not chat_id:
