@@ -13,7 +13,7 @@ def setup_scheduler(application,loop):
         )
     scheduler.add_job(
         afternoon_check_job,
-        trigger=CronTrigger(hour=13,minute=0,timezone=MOSCOW_TZ),
+        trigger=CronTrigger(hour=15,minute=30,timezone=MOSCOW_TZ),
         args=[application],
         id='afternoon_check',
         )
