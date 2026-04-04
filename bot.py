@@ -120,3 +120,15 @@ if __name__ == "__main__":
     flask_thread = threading.Thread(target=run_flask, daemon=True)
     flask_thread.start()
     asyncio.run(run_bot())
+
+async def price(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    prices = fetch_prices()
+    if prices:
+        text = "\n".join([f"{p}: {pr} ₽" for p, pr in prices.items()])
+    else:
+        text = "Не удалось получить цены (требуется авторизация?)"
+    await update.message.reply_text(text)
+
+# В run_bot() добавить:
+application.add_handler(CommandHandler("price", price))
