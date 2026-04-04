@@ -39,19 +39,27 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 async def morning_report(app):
+    print("DEBUG: morning_report started")
     chat_id = load_chat_id()
+    print(f"DEBUG: chat_id = {chat_id}")
     if not chat_id:
-        logger.warning("Нет сохранённого chat_id, утренний отчёт не отправлен.")
+        print("DEBUG: no chat_id, exiting")
         return
+    print("DEBUG: calling fetch_prices()")
     prices = fetch_prices()
+    print(f"DEBUG: prices = {prices}")
     if prices:
         save_prices(prices)
         text = "🌅 Доброе утро! Текущие цены на нефтепродукты:\n"
         for product, price in prices.items():
             text += f"• {product}: {price} ₽\n"
+        print("DEBUG: sending message with prices")
         await app.bot.send_message(chat_id=chat_id, text=text)
+        print("DEBUG: message sent")
     else:
+        print("DEBUG: no prices, sending error message")
         await app.bot.send_message(chat_id=chat_id, text="Не удалось получить цены утром. Проверьте сайт.")
+        print("DEBUG: error message sent")
 
 async def afternoon_check(app):
     chat_id = load_chat_id()
