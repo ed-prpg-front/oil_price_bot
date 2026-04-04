@@ -23,8 +23,8 @@ def setup_scheduler(application,loop):
 
 async def morning_report_job(app):
     from bot import morning_report
-    await morning_report(app.bot, app)
+    await morning_report(app)          # ← только app
 
 async def afternoon_check_job(app):
     from bot import afternoon_check
-    await afternoon_check(app.bot, app)
+    await afternoon_check(app)         # ← только app
