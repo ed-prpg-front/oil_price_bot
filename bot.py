@@ -103,7 +103,7 @@ async def run_bot():
     )
     scheduler.add_job(
         afternoon_check,
-        CronTrigger(hour=13, minute=5, timezone=MOSCOW_TZ),
+        CronTrigger(hour=15, minute=40, timezone=MOSCOW_TZ),
         args=[application]
     )
     scheduler.start()
