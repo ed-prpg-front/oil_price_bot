@@ -6,7 +6,7 @@ TOKEN = os.getenv("TOKEN")
 
 #Адрес страницы с ценами
 
-TARGET_URL = "https://new.trade.tatneft.ru/promo/production/58";
+TARGET_URL = "https://new.trade.tatneft.ru/promo/api/v1/products-categories?sale_type=ONLINE_OFFLINE&ascending=true&order=name";
 
 #Московский часовой пояс
 
