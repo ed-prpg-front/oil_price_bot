@@ -7,7 +7,7 @@ def setup_scheduler(application,loop):
 
     scheduler.add_job(
     morning_report_job,
-    trigger = CronTrigger(hour=16 minute=48,timezone=MOSCOW_TZ),
+    trigger = CronTrigger(hour=17 minute=04,timezone=MOSCOW_TZ),
     args=[application],
     id = 'morning_report'
         )
