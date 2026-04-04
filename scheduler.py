@@ -1,13 +1,21 @@
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from config import MOSCOW_TZ;
+import logging;
 
+logger = logging.getLogger(__name__)
+
+async def morning_report_job(app):
+    logger.info("morning_report_job: started")
+    from bot import morning_report
+    await morning_report(app)
+    logger.info("morning_report_job: finished");
 def setup_scheduler(application,loop):
     scheduler = AsyncIOScheduler (timezone=MOSCOW_TZ,event_loop=loop);
 
     scheduler.add_job(
     morning_report_job,
-    trigger = CronTrigger(hour=18,minute=58,timezone=MOSCOW_TZ),
+    trigger = CronTrigger(hour=19,minute=16,timezone=MOSCOW_TZ),
     args=[application],
     id = 'morning_report'
         )
