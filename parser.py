@@ -15,10 +15,10 @@ def fetch_prices():
             name = item.get("name")
             price = item.get("min_price")
             if name and price:
-                if "АИ-92" in name:
-                    prices["АИ-92"] = float(price)
-                elif "АИ-95" in name:
-                    prices["АИ-95"] = float(price)
+                if "АИ-98" in name:
+                    prices["АИ-98"] = float(price)
+                elif "АИ-100" in name:
+                    prices["АИ-100"] = float(price)
         
         # Если нашли оба продукта — возвращаем, иначе None
         return prices if len(prices) == 2 else None
