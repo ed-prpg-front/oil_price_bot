@@ -3,6 +3,7 @@ import pytz;
 import os
 
 TOKEN = os.getenv("TOKEN")
+CRON_SECRET = os.getenv("CRON_SECRET", "default_secret_change_me")
 
 #Адрес страницы с ценами
 
