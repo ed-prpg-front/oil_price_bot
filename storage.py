@@ -14,7 +14,7 @@ def save_prices (prices):
 
 def load_chat_id ():
     if os.path.exists (CHAT_ID_FILE):
-        with open (CHAT_ID_FILE,r) as f:
+        with open (CHAT_ID_FILE,"r") as f:
             return int(f.read().strip())
     return None;
 
