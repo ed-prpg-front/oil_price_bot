@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from config import TARGET_URL
+#from config import TARGET_URL
 
 def fetch_prices():
     try:
