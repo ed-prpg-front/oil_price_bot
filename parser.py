@@ -3,16 +3,26 @@ from config import TARGET_URL
 
 def fetch_prices():
     try:
-        response = requests.get(TARGET_URL, timeout=10)
+        response = requests.get(TARGET_URL, timeout=15)
         response.raise_for_status()
         data = response.json()
-        
-        # Данные лежат внутри ключа "data"
-        items = data.get("data", [])
         prices = {}
+        
+        # Если данные приходят внутри ключа "data"
+        if isinstance(data, dict) and "data" in data:
+            items = data["data"]
+        elif isinstance(data, list):
+            items = data
+        else:
+            items = []
         
         for item in items:
             name = item.get("name")
+            # Проверяем, что в способах доставки есть PICKUP (автоналив)
+            delivery_types = item.get("product_delivery_types", [])
+            if "PICKUP" not in delivery_types:
+                continue  # пропускаем товары, которые нельзя отгрузить автотранспортом
+            
             price = item.get("min_price")
             if name and price:
                 if "АИ-92" in name:
@@ -20,9 +30,7 @@ def fetch_prices():
                 elif "АИ-95" in name:
                     prices["АИ-95"] = float(price)
         
-        # Если нашли оба продукта — возвращаем, иначе None
-        return prices if len(prices) == 2 else None
-        
+        return prices if prices else None
     except Exception as e:
         print(f"Ошибка получения цен: {e}")
         return None
