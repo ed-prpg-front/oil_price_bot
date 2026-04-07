@@ -1,25 +1,51 @@
 import json
 import os
-from config import PRICES_FILE,CHAT_ID_FILE;
+from config import PRICES_FILE
 
-def load_last_prices ():
-    if os.path.exists (PRICES_FILE):
-        with open (PRICES_FILE,r,encoding = 'utf-8') as f:
-            return json.load(f);
-    return {};
+# ---------- Цены (без изменений) ----------
+def load_last_prices():
+    if os.path.exists(PRICES_FILE):
+        with open(PRICES_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
 
-def save_prices (prices):
-    with open (PRICES_FILE,w,encoding = 'utf-8') as f:
-        json.dump (prices,f,ensure_ascii = 'false',indent = 2)
+def save_prices(prices):
+    with open(PRICES_FILE, 'w', encoding='utf-8') as f:
+        json.dump(prices, f, ensure_ascii=False, indent=2)
 
-def load_chat_id ():
-    if os.path.exists (CHAT_ID_FILE):
-        with open (CHAT_ID_FILE,"r") as f:
-            return int(f.read().strip())
-    return None;
+# ---------- Подписчики (новое) ----------
+SUBSCRIBERS_FILE = "subscribers.json"
 
-def save_chat_id(chat_id):
-    """Сохраняет ID чата в файл."""
-    with open(CHAT_ID_FILE, 'w') as f:
-        f.write(str(chat_id))
-        
+def load_subscribers():
+    """Загружает список chat_id подписчиков"""
+    if os.path.exists(SUBSCRIBERS_FILE):
+        with open(SUBSCRIBERS_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return []
+
+def save_subscribers(subscribers):
+    """Сохраняет список подписчиков"""
+    with open(SUBSCRIBERS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(subscribers, f, ensure_ascii=False, indent=2)
+
+def add_subscriber(chat_id):
+    """Добавляет пользователя в список, если его там ещё нет"""
+    subscribers = load_subscribers()
+    if chat_id not in subscribers:
+        subscribers.append(chat_id)
+        save_subscribers(subscribers)
+        return True
+    return False
+
+def remove_subscriber(chat_id):
+    """Удаляет пользователя из списка"""
+    subscribers = load_subscribers()
+    if chat_id in subscribers:
+        subscribers.remove(chat_id)
+        save_subscribers(subscribers)
+        return True
+    return False
+
+def get_all_subscribers():
+    """Возвращает список всех подписчиков"""
+    return load_subscribers()
