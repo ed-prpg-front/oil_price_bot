@@ -1,46 +1,40 @@
 import requests
 from bs4 import BeautifulSoup
-#from config import TARGET_URL
+
+PRODUCT_URLS = {
+    "АИ-92": "https://new.trade.tatneft.ru/promo/production/58",
+    "АИ-95": "https://new.trade.tatneft.ru/promo/production/67"
+}
 
 def fetch_prices():
-    try:
-        response = requests.get(TARGET_URL, timeout=15)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # Находим все карточки товаров
-        product_cards = soup.find_all('div', class_='space-y-[20px] rounded-[16px] bg-white p-[20px]')
-        
-        prices = {}
-        for card in product_cards:
-            # Ищем название товара
-            name_elem = card.find('div', class_='text-regular-23')
-            if not name_elem:
-                continue
-            name = name_elem.get_text(strip=True)
+    prices = {}
+    for product_name, url in PRODUCT_URLS.items():
+        try:
+            response = requests.get(url, timeout=15)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, 'html.parser')
             
-            # Проверяем, что это АИ-92 или АИ-95
-            if "АИ-92" in name:
-                product_key = "АИ-92"
-            elif "АИ-95" in name:
-                product_key = "АИ-95"
-            else:
-                continue  # не наш продукт
+            # Ищем все элементы с ценой
+            price_elements = soup.find_all('div', class_='text-regular-28')
             
-            # Ищем цену в этом же блоке
-            price_elem = card.find('div', class_='text-regular-28')
-            if not price_elem:
-                # Если не нашли, возможно цена в мобильной версии
-                price_elem = card.find('div', class_='text-regular-28 max-md:hidden')
-            
-            if price_elem:
-                price_text = price_elem.get_text(strip=True)
-                # Очищаем от &nbsp;, пробелов и символа рубля
+            max_price = 0
+            for el in price_elements:
+                price_text = el.get_text(strip=True)
                 price_text = price_text.replace('\xa0', '').replace('₽', '').strip()
-                price = float(price_text)
-                prices[product_key] = price
-        
-        return prices if prices else None
-    except Exception as e:
-        print(f"Ошибка парсинга: {e}")
+                if price_text.isdigit():
+                    price = int(price_text)
+                    if price > max_price:
+                        max_price = price
+            
+            if max_price > 0:
+                prices[product_name] = float(max_price)
+            else:
+                prices[product_name] = None
+                
+        except Exception as e:
+            print(f"Ошибка парсинга {product_name}: {e}")
+            prices[product_name] = None
+    
+    if any(p is None for p in prices.values()):
         return None
+    return prices
